@@ -1,14 +1,26 @@
 import { useState } from 'react';
 import API from '../api';
+import { useNavigate } from "react-router-dom";
 
 function VoiceExpense({ fetchExpenses ,
   darkMode, }) {
+  const navigate = useNavigate();
+   const [showLoginMsg, setShowLoginMsg] =useState(false);
 
   const [transcript, setTranscript] = useState('');
   const [listening, setListening] = useState(false);
   const [recognitionObj, setRecognitionObj] = useState(null);
 
   const startListening = () => {
+
+
+  const token = localStorage.getItem("token");
+
+   if (!token) {
+    setShowLoginMsg(true);
+    return;
+  }
+  setShowLoginMsg(false);
 
     const SpeechRecognition =
       window.SpeechRecognition ||
@@ -143,6 +155,20 @@ function VoiceExpense({ fetchExpenses ,
       <h2 className="text-xl font-semibold mb-4">
         AI Voice Expense
       </h2>
+      {showLoginMsg && (
+  <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 p-3 rounded-lg mb-4 flex justify-between items-center">
+    <span>
+       Please login to use Voice Expense
+    </span>
+
+    <button
+      onClick={() => navigate("/login")}
+      className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+    >
+      Login
+    </button>
+  </div>
+)}
 
       {!listening ? (
         <button

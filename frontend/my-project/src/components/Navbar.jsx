@@ -1,3 +1,4 @@
+
 import {
   FaMoon,
   FaSun,
@@ -5,7 +6,10 @@ import {
   FaRedo,
   FaSignOutAlt,
   FaWallet,
+  FaSignInAlt,
 } from "react-icons/fa";
+
+import { useNavigate } from "react-router-dom";
 
 function Navbar({
   darkMode,
@@ -14,6 +18,10 @@ function Navbar({
   handleReset,
   exportCSV,
 }) {
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/10 border-b border-white/20 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col lg:flex-row justify-between items-center gap-4">
@@ -87,13 +95,23 @@ function Navbar({
             Reset
           </button>
 
-          <button
-            onClick={logoutHandler}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl font-medium bg-red-500 text-white shadow-md hover:bg-red-600 hover:scale-105 transition-all duration-300"
-          >
-            <FaSignOutAlt />
-            Logout
-          </button>
+          {token ? (
+            <button
+              onClick={logoutHandler}
+              className="flex items-center gap-2 px-5 py-3 rounded-xl font-medium bg-red-500 text-white shadow-md hover:bg-red-600 hover:scale-105 transition-all duration-300"
+            >
+              <FaSignOutAlt />
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="flex items-center gap-2 px-5 py-3 rounded-xl font-medium bg-blue-600 text-white shadow-md hover:bg-blue-700 hover:scale-105 transition-all duration-300"
+            >
+              <FaSignInAlt />
+              Login
+            </button>
+          )}
 
         </div>
       </div>

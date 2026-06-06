@@ -1,7 +1,13 @@
 import { useState } from "react";
 import API from "../api";
+import { useNavigate } from "react-router-dom";
 
 function OCRUpload({ fetchExpenses,  darkMode, }) {
+
+
+
+  const navigate = useNavigate();
+   const [showLoginMsg, setShowLoginMsg] =useState(false);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,6 +22,13 @@ function OCRUpload({ fetchExpenses,  darkMode, }) {
   };
 
   const uploadBill = async () => {
+ const token = localStorage.getItem("token");
+
+   if (!token) {
+    setShowLoginMsg(true);
+    return;
+  }
+  setShowLoginMsg(false);
     if (!file) {
       alert("Please select an image");
       return;
@@ -83,7 +96,20 @@ function OCRUpload({ fetchExpenses,  darkMode, }) {
       <h2 className="text-xl font-semibold mb-4">
         OCR Bill Scanner
       </h2>
+{showLoginMsg && (
+  <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 p-3 rounded-lg mb-4 flex justify-between items-center">
+    <span>
+      🔒 Please login to use OCR Scanner
+    </span>
 
+    <button
+      onClick={() => navigate("/login")}
+      className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+    >
+      Login
+    </button>
+  </div>
+)}
       <input
         type="file"
         id="billUpload"
